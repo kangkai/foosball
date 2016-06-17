@@ -64,11 +64,11 @@ if __name__ == '__main__':
         
     kicker = KickertoolJson(file)
 
-    """
     print "Number of players: ", kicker.num_players()
     for i in kicker.players.keys():
         print i, ":", kicker.players[i]
 
+    """
     print "Number of plays: ", kicker.num_plays()
     for i in kicker.plays.keys():
         print i, ":"
