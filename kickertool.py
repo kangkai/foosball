@@ -42,7 +42,10 @@ class KickertoolJson(object):
         # parse teams
         self.teams = {}
         for t in parsed_json['teams']:
-            self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
+            if len(t['players']) == 2:
+                   self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
+            else:
+                   self.teams[t['id']] = [t['players'][0]['id']]
         
 
     def num_players(self):
@@ -90,12 +93,16 @@ if __name__ == '__main__':
         team2 = kicker.plays[p][1][0]
         pid = kicker.teams[team1][0]
         t1_player1 = kicker.players[pid]
-        pid = kicker.teams[team1][1]
-        t1_player2 = kicker.players[pid]
+        t1_player2 = ""
+        if len(kicker.teams[team1]) == 2:
+            pid = kicker.teams[team1][1]
+            t1_player2 = kicker.players[pid]
         pid = kicker.teams[team2][0]
         t2_player1 = kicker.players[pid]
-        pid = kicker.teams[team2][1]
-        t2_player2 = kicker.players[pid]
+        t2_player2 = ""
+        if len(kicker.teams[team2]) == 2:
+            pid = kicker.teams[team2][1]
+            t2_player2 = kicker.players[pid]
 
         print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1, t2_player2, score2,
                                               t1_player1, t1_player2, score1)
