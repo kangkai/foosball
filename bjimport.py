@@ -23,6 +23,8 @@ kickername_rankadename_mapping = {
     u"guangxin":u"*Ren Guangxin"
 }
 
+playground = "Black Sun Bar"
+
 class Kickertool(object):
     """Handle json from kickertool output
     properties:
@@ -116,7 +118,7 @@ class Rankade(object):
         select = Select(driver.find_element_by_name('countFactions'))
         select.select_by_index(0)
         driver.find_element_by_name('newGameMatch').send_keys("Foosball")
-        driver.find_element_by_name('newPlaceMatch').send_keys("Xiaomi Wuchaicheng 11F")
+        driver.find_element_by_name('newPlaceMatch').send_keys(playground)
         driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
         if len(match) == 6:
