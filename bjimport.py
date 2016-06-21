@@ -53,7 +53,7 @@ class Kickertool(object):
         # parse plays
         self.plays = {}
         for p in parsed_json['plays']:
-            if not p['deactivated']:
+            if p['valid']:
                 scores = {}
                 score1 = p['disciplines'][0]['sets'][0]['team1']
                 score2 = p['disciplines'][0]['sets'][0]['team2']
@@ -195,8 +195,12 @@ if __name__ == "__main__":
             pid = kicker.teams[team2][1]
             t2_player2 = kicker.players[pid]
 
-        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1, t2_player2, score2,
-                                              t1_player1, t1_player2, score1)
+        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1.encode('utf8'),
+                                              t2_player2.encode('utf8'),
+                                              score2,
+                                              t1_player1.encode('utf8'),
+                                              t1_player2.encode('utf8'),
+                                              score1)
 
         if t1_player2 == "":
             one_match = [kickername_rankadename_mapping[t2_player1],
