@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import json, sys, operator
 
@@ -69,7 +70,7 @@ if __name__ == '__main__':
 
     print "Number of players: ", kicker.num_players()
     for i in kicker.players.keys():
-        print i, ":", kicker.players[i]
+        print i, ":", kicker.players[i].encode('utf8')
 
     """
     print "Number of plays: ", kicker.num_plays()
@@ -104,6 +105,10 @@ if __name__ == '__main__':
             pid = kicker.teams[team2][1]
             t2_player2 = kicker.players[pid]
 
-        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1, t2_player2, score2,
-                                              t1_player1, t1_player2, score1)
+        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1.encode('utf8'),
+                                              t2_player2.encode('utf8'),
+                                              score2,
+                                              t1_player1.encode('utf8'),
+                                              t1_player2.encode('utf8'),
+                                              score1)
         index = index + 1
