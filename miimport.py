@@ -13,6 +13,7 @@ import sys, time, re, json, operator
 
 kickername_rankadename_mapping = {
     u"康凯":u"尹康凯",
+    u"尹康凯":u"尹康凯",
     u"孟晓然":u"*Meng Xiaoran",
     u"赵瑞华":u"Zhaoruihua",
     u"曹聃":u"曹先森",
@@ -21,16 +22,24 @@ kickername_rankadename_mapping = {
     u"施磊":u"*Shi Lei",
     u"任恬":u"*Ren Tian",
     u"苏本昌":u"苏本昌",
+    u"本昌":u"苏本昌",
     u"肖晓林":u"*Xiao Xiaolin",
     u"国祝":u"*guozhu",
     u"张小武":u"XiaowuZhang",
     u"韩广义":u"HanGuangyi",
+    u"广义":u"HanGuangyi",
     u"Matt":u"*matt",
+    u"张茜明":u"zhangximing",
     u"茜明":u"zhangximing",
     u"博士":u"*boshi",
     u"鑫岩":u"Xinyan Xing",
+    u"邢鑫岩":u"Xinyan Xing",
     u"Lisa":u"*Lisa",
-    u"关剑喜（替补）":u"*guanjianxi"
+    u"lisa":u"*Lisa",
+    u"关剑喜（替补）":u"*guanjianxi",
+    u"彭亚":u"*Peng Ya",
+    u"教练":u"*Gu Yafei",
+    u"佐罗":u"*Zuo Luo"
 }
 
 class Kickertool(object):
