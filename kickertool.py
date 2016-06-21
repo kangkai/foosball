@@ -30,7 +30,7 @@ class KickertoolJson(object):
         # parse plays
         self.plays = {}
         for p in parsed_json['plays']:
-            if not p['deactivated']:
+            if p['valid']:
                 scores = {}
                 score1 = p['disciplines'][0]['sets'][0]['team1']
                 score2 = p['disciplines'][0]['sets'][0]['team2']
