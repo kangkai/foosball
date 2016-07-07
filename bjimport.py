@@ -14,12 +14,21 @@ import sys, time, re, json, operator
 kickername_rankadename_mapping = {
     u"kangkai":u"尹康凯",
     u"qinling":u"Ling Qin",
+    u"Qin ling":u"Ling Qin",
     u"xiaohua":u"Zhaoruihua",
     u"caodan":u"曹先森",
+    u"cao dan":u"曹先森",
     u"benchang":u"苏本昌",
     u"xiaoming":u"zhangximing",
     u"suosuo":u"*suosuo",
     u"caolandi":u"*25453678",
+    u"cao landi":u"*25453678",
+    u"Jia yulong":u"*Jia Yulong",
+    u"zhang lei":u"Zhang Lei",
+    u"tang meifu":u"*Tang Meifu",
+    u"8 hao":u"*8 Hao",
+    u"Zhan feng":u"*Zhan Feng",
+    u"Xiao tong":u"*Xiao Tong",
     u"guangxin":u"*Ren Guangxin"
 }
 
@@ -69,7 +78,7 @@ class Kickertool(object):
                 self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
             else:
                 self.teams[t['id']] = [t['players'][0]['id']]
-        
+
 
     def num_players(self):
         """Return number of players in json file"""
@@ -109,7 +118,7 @@ class Rankade(object):
 
         #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR,
         #                                                    'a.pull-right.btn.btn-default.btn-small.newMatchButton')))
-        time.sleep(10) # FIXME: above wait seems not work very well
+        time.sleep(15) # FIXME: above wait seems not work very well
         driver.find_element_by_css_selector("a.pull-right.btn.btn-default.btn-small.newMatchButton").click()
 
         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))

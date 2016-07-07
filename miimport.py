@@ -19,8 +19,10 @@ kickername_rankadename_mapping = {
     u"曹聃":u"曹先森",
     u"曹凯":u"*Cao Kai",
     u"慧芳":u"*Liu Huifang",
+    u"刘慧芳":u"*Liu Huifang",
     u"施磊":u"*Shi Lei",
     u"任恬":u"*Ren Tian",
+    u"Ren Tian":u"*Ren Tian",
     u"苏本昌":u"苏本昌",
     u"本昌":u"苏本昌",
     u"肖晓林":u"*Xiao Xiaolin",
@@ -38,7 +40,11 @@ kickername_rankadename_mapping = {
     u"lisa":u"*Lisa",
     u"关剑喜（替补）":u"*guanjianxi",
     u"彭亚":u"*Peng Ya",
+    u"Peng Ya":u"*Peng Ya",
     u"教练":u"*Gu Yafei",
+    u"Yu Yunda":u"*Yu Yunda",
+    u"lily":u"Lilyhao",
+    u"秦岭":u"Ling Qin",
     u"佐罗":u"*Zuo Luo"
 }
 
@@ -82,8 +88,11 @@ class Kickertool(object):
         # parse teams
         self.teams = {}
         for t in parsed_json['teams']:
-            self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
-        
+            if len(t['players']) == 2:
+                self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
+            else:
+                self.teams[t['id']] = [t['players'][0]['id']]
+
 
     def num_players(self):
         """Return number of players in json file"""
@@ -125,7 +134,7 @@ class Rankade(object):
 
         #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR,
         #                                                    'a.pull-right.btn.btn-default.btn-small.newMatchButton')))
-        time.sleep(10) # FIXME: above wait seems not work very well
+        time.sleep(15) # FIXME: above wait seems not work very well
         driver.find_element_by_css_selector("a.pull-right.btn.btn-default.btn-small.newMatchButton").click()
 
         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
@@ -137,22 +146,37 @@ class Rankade(object):
         driver.find_element_by_name('newPlaceMatch').send_keys("Xiaomi Wuchaicheng 11F")
         driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
-        xpath = '//label[text()=' + '" ' + match[0] + '"]'
-        driver.find_element_by_xpath(xpath).click()
-        xpath = '//label[text()=' + '" ' + match[1] + '"]'
-        driver.find_element_by_xpath(xpath).click()
+        if len(match) == 6:
+            xpath = '//label[text()=' + '" ' + match[0] + '"]'
+            driver.find_element_by_xpath(xpath).click()
 
-        driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+            xpath = '//label[text()=' + '" ' + match[1] + '"]'
+            driver.find_element_by_xpath(xpath).click()
 
-        xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[3] + '"]'
-        driver.find_element_by_xpath(xpath).click()
-        xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[4] + '"]'
-        driver.find_element_by_xpath(xpath).click()
+            driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
-        driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+            xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[3] + '"]'
+            driver.find_element_by_xpath(xpath).click()
+            xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[4] + '"]'
+            driver.find_element_by_xpath(xpath).click()
 
-        score1 = match[2]
-        score2 = match[5]
+            driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+
+            score1 = match[2]
+            score2 = match[5]
+        else:
+            xpath = '//label[text()=' + '" ' + match[0] + '"]'
+            driver.find_element_by_xpath(xpath).click()
+
+            driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+
+            xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[2] + '"]'
+            driver.find_element_by_xpath(xpath).click()
+
+            driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+
+            score1 = match[1]
+            score2 = match[3]
 
         driver.find_element_by_css_selector('input.form-control.input-xs').send_keys(score1)
         driver.find_element_by_xpath('//div[@data-faction-step-class="matchStep3"]/div[3]/input').send_keys(score2)
@@ -184,12 +208,17 @@ if __name__ == "__main__":
         team2 = kicker.plays[p][1][0]
         pid = kicker.teams[team1][0]
         t1_player1 = kicker.players[pid]
-        pid = kicker.teams[team1][1]
-        t1_player2 = kicker.players[pid]
+        t1_player2 = ""
+        if len(kicker.teams[team1]) == 2:
+            pid = kicker.teams[team1][1]
+            t1_player2 = kicker.players[pid]
+
         pid = kicker.teams[team2][0]
         t2_player1 = kicker.players[pid]
-        pid = kicker.teams[team2][1]
-        t2_player2 = kicker.players[pid]
+        t2_player2 = ""
+        if len(kicker.teams[team2]) == 2:
+            pid = kicker.teams[team2][1]
+            t2_player2 = kicker.players[pid]
 
         print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1.encode('utf8'),
                                               t2_player2.encode('utf8'),
@@ -197,12 +226,19 @@ if __name__ == "__main__":
                                               t1_player1.encode('utf8'),
                                               t1_player2.encode('utf8'),
                                               score1)
-        one_match = [kickername_rankadename_mapping[t2_player1],
-                     kickername_rankadename_mapping[t2_player2],
-                     score2,
-                     kickername_rankadename_mapping[t1_player1],
-                     kickername_rankadename_mapping[t1_player2],
-                     score1]
+
+        if t1_player2 == "":
+            one_match = [kickername_rankadename_mapping[t2_player1],
+                         score2,
+                         kickername_rankadename_mapping[t1_player1],
+                         score1]
+        else:
+            one_match = [kickername_rankadename_mapping[t2_player1],
+                         kickername_rankadename_mapping[t2_player2],
+                         score2,
+                         kickername_rankadename_mapping[t1_player1],
+                         kickername_rankadename_mapping[t1_player2],
+                         score1]
         rankade.insert_one_match(one_match)
 
         index = index + 1
