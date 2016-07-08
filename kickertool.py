@@ -2,64 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json, sys, operator
-
-class KickertoolJson(object):
-    """Handle json from kickertool output
-    properties:
-    players: dict for players {player1_id: name, ...}
-    teams: dict for teams {team_id: [player1_id, player2_id], ...}
-    plays: dict for plays {play_id: [(team1_id, score), (team2_id: score)], ...}
-    """
-
-    def __init__(self, path):
-        """parse the file/path"""
-        file = open(path)
-        print "Load file name: ", file.name
-        str = file.read()
-        # print "string: ", str
-        file.close()
-
-        parsed_json = json.loads(str)
-        print "id: %s" % parsed_json["id"]
-        print "created: %s" % parsed_json["created"]
-        self.date = parsed_json["created"].encode('ascii')[0:10]
-        print "date: %s" % self.date
-
-        # parse players
-        self.players = {}
-        for p in parsed_json['players']:
-            self.players[p['id']] = p['name']
-
-        # parse plays
-        self.plays = {}
-        for p in parsed_json['plays']:
-            if p['valid']:
-                scores = {}
-                score1 = p['disciplines'][0]['sets'][0]['team1']
-                score2 = p['disciplines'][0]['sets'][0]['team2']
-                scores[p['team1']['id']] = score1
-                scores[p['team2']['id']] = score2
-                sorted_scores = sorted(scores.items(), key=operator.itemgetter(1))
-                self.plays[p['id']] = sorted_scores
-
-        # parse teams
-        self.teams = {}
-        for t in parsed_json['teams']:
-            if len(t['players']) == 2:
-                   self.teams[t['id']] = [t['players'][0]['id'], t['players'][1]['id']]
-            else:
-                   self.teams[t['id']] = [t['players'][0]['id']]
-        
-
-    def num_players(self):
-        """Return number of players in json file"""
-        return len(self.players)
-
-    def num_teams(self):
-        return len(self.teams)
-
-    def num_plays(self):
-        return len(self.plays)
+from kickerrankade import Kickertool
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
@@ -68,7 +11,7 @@ if __name__ == '__main__':
         print "Usage: %s filename" % sys.argv[0]
         sys.exit(0)
         
-    kicker = KickertoolJson(file)
+    kicker = Kickertool(file)
 
     print "Number of players: ", kicker.num_players()
     for i in kicker.players.keys():
