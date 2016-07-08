@@ -29,10 +29,12 @@ kickername_rankadename_mapping = {
     u"8 hao":u"*8 Hao",
     u"Zhan feng":u"*Zhan Feng",
     u"Xiao tong":u"*Xiao Tong",
+    u"Zhao wuji":u"赵无忌",
     u"guangxin":u"*Ren Guangxin"
 }
 
 playground = "Black Sun Bar"
+groupname = "bjfoosball"
 
 class Kickertool(object):
     """Handle json from kickertool output
@@ -110,7 +112,7 @@ class Rankade(object):
         assert 'rankade' in driver.title
         driver.find_element_by_id("dashboardLink").click()
         # assert 'rankade - My dashboard' in driver.title
-        driver.find_element_by_link_text("bjfoosball").click()
+        driver.find_element_by_link_text(groupname).click()
 
     def insert_one_match(self, match):
         # match is a list, e.g.: [u'孟晓然', u'苏本昌', 5, u'Lisa', u'慧芳', 2] """

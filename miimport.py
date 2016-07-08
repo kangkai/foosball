@@ -48,6 +48,9 @@ kickername_rankadename_mapping = {
     u"佐罗":u"*Zuo Luo"
 }
 
+playground = "Xiaomi Wuchaicheng 11F"
+groupname = "mifoosball"
+
 class Kickertool(object):
     """Handle json from kickertool output
     properties:
@@ -124,9 +127,7 @@ class Rankade(object):
         assert 'rankade' in driver.title
         driver.find_element_by_id("dashboardLink").click()
         # assert 'rankade - My dashboard' in driver.title
-        driver.find_element_by_link_text("mifoosball").click()
-        # driver.save_screenshot('mifoosball.png')
-        # assert 'mifoosball' in driver.title
+        driver.find_element_by_link_text(groupname).click()
 
     def insert_one_match(self, match):
         # match is a list, e.g.: [u'孟晓然', u'苏本昌', 5, u'Lisa', u'慧芳', 2] """
@@ -143,7 +144,7 @@ class Rankade(object):
         select = Select(driver.find_element_by_name('countFactions'))
         select.select_by_index(0)
         driver.find_element_by_name('newGameMatch').send_keys("Foosball")
-        driver.find_element_by_name('newPlaceMatch').send_keys("Xiaomi Wuchaicheng 11F")
+        driver.find_element_by_name('newPlaceMatch').send_keys(playground)
         driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
         if len(match) == 6:
