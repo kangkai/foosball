@@ -30,6 +30,8 @@ class Kickertool(object):
         parsed_json = json.loads(str)
         print "id: %s" % parsed_json["id"]
         print "created: %s" % parsed_json["created"]
+        self.date = parsed_json["created"].encode('ascii')[0:10]
+        print "date: %s" % self.date
 
         # parse players
         self.players = {}
@@ -89,7 +91,7 @@ class Rankade(object):
         # assert 'rankade - My dashboard' in driver.title
         driver.find_element_by_link_text(groupname).click()
 
-    def insert_one_match(self, match):
+    def insert_one_match(self, date, match):
         # match is a list, e.g.: [u'孟晓然', u'苏本昌', 5, u'Lisa', u'慧芳', 2] """
         driver = self.driver
 
@@ -105,6 +107,8 @@ class Rankade(object):
         select.select_by_index(0)
         driver.find_element_by_name('newGameMatch').send_keys("Foosball")
         driver.find_element_by_name('newPlaceMatch').send_keys(playground)
+        driver.find_element_by_css_selector('input.form-control.input-sm.matchDate.hasDatepicker').clear()
+        driver.find_element_by_css_selector('input.form-control.input-sm.matchDate.hasDatepicker').send_keys(date)
         driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
         if len(match) == 6:
@@ -200,6 +204,6 @@ if __name__ == "__main__":
                          kickername_rankadename_mapping[t1_player1],
                          kickername_rankadename_mapping[t1_player2],
                          score1]
-        rankade.insert_one_match(one_match)
+        rankade.insert_one_match(kicker.date, one_match)
 
         index = index + 1
