@@ -22,6 +22,8 @@ class KickertoolJson(object):
         parsed_json = json.loads(str)
         print "id: %s" % parsed_json["id"]
         print "created: %s" % parsed_json["created"]
+        self.date = parsed_json["created"].encode('ascii')[0:10]
+        print "date: %s" % self.date
 
         # parse players
         self.players = {}
