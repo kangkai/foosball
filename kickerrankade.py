@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import ElementNotVisibleException
+from selenium.common.exceptions import WebDriverException
 import sys, time, re, json, operator
 
 class Kickertool(object):
@@ -70,8 +72,13 @@ class Kickertool(object):
         return len(self.plays)
 
 class Rankade(object):
-    def __init__(self, username, passwd):
-        self.driver = webdriver.Chrome()
+    def __init__(self, username, passwd, playground, groupname):
+        self.playground = playground
+
+        chrome_options = webdriver.ChromeOptions()
+        #chrome_options.add_argument('--start-maximized')
+        chrome_options.add_argument('--proxy-server=socks5://127.0.0.1:1080')
+        self.driver = webdriver.Chrome(chrome_options = chrome_options)
         driver = self.driver
 
         driver.implicitly_wait(300) # seconds
@@ -97,28 +104,56 @@ class Rankade(object):
 
         #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR,
         #                                                    'a.pull-right.btn.btn-default.btn-small.newMatchButton')))
-        time.sleep(15) # FIXME: above wait seems not work very well
+        time.sleep(60) # FIXME: above wait seems not work very well
         driver.find_element_by_css_selector("a.pull-right.btn.btn-default.btn-small.newMatchButton").click()
 
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
+        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
         driver.execute_script("matchForm.toggleAdditionalOptions();")
 
         select = Select(driver.find_element_by_name('countFactions'))
         select.select_by_index(0)
         driver.find_element_by_name('newGameMatch').send_keys("Foosball")
-        driver.find_element_by_name('newPlaceMatch').send_keys(playground)
-        driver.find_element_by_css_selector('input.form-control.input-sm.matchDate.hasDatepicker').clear()
-        driver.find_element_by_css_selector('input.form-control.input-sm.matchDate.hasDatepicker').send_keys(date)
+        driver.find_element_by_name('newPlaceMatch').send_keys(self.playground)
+        #driver.find_element_by_name('matchDate').clear()
+        driver.find_element_by_name('matchDate').send_keys(Keys.CONTROL + "a");
+        #driver.find_element_by_name('matchDate').click()
+        driver.find_element_by_name('matchDate').send_keys(date)
+
+        driver.execute_script("matchForm.toggleAdditionalOptions();")
+
         driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
 
         if len(match) == 6:
             xpath = '//label[text()=' + '" ' + match[0] + '"]'
-            driver.find_element_by_xpath(xpath).click()
+            print xpath
+            for i in range(10):
+                try:
+                    driver.find_element_by_xpath(xpath).click()
+                    break
+                except WebDriverException as e:
+                    print('retry in 1s.')
+                    time.sleep(1)
+            else:
+                raise e
+
+            time.sleep(1)
 
             xpath = '//label[text()=' + '" ' + match[1] + '"]'
-            driver.find_element_by_xpath(xpath).click()
+            print xpath
+            for i in range(10):
+                try:
+                    driver.find_element_by_xpath(xpath).click()
+                    break
+                except WebDriverException as e:
+                    print('retry in 1s.')
+                    time.sleep(1)
+            else:
+                raise e
+
+            time.sleep(1)
 
             driver.find_element_by_css_selector('button.btn.btn-default.btn-sm.next.pull-right').click()
+            time.sleep(1)
 
             xpath = '//div[@data-step-id="1"]/div/div/p/label[text()=' + '" ' + match[3] + '"]'
             driver.find_element_by_xpath(xpath).click()
@@ -143,6 +178,7 @@ class Rankade(object):
             score1 = match[1]
             score2 = match[3]
 
+        time.sleep(1)
         driver.find_element_by_css_selector('input.form-control.input-xs').send_keys(score1)
         driver.find_element_by_xpath('//div[@data-faction-step-class="matchStep3"]/div[3]/input').send_keys(score2)
 
@@ -151,18 +187,11 @@ class Rankade(object):
 
         print "done"
 
-
-if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print "Usage: %s xxx.ktool username passwd" % sys.argv[0]
-        print "\t xxx.ktool: file exported from kickertool"
-        print "\t username/passwd: your rankade user/pass"
-        sys.exit(0)
-
-    kicker = Kickertool(sys.argv[1])
+def main(ktoolfile, username, passwd, playground, groupname, namemap):
+    kicker = Kickertool(ktoolfile)
     print "Number of plays: ", kicker.num_plays()
 
-    rankade = Rankade(sys.argv[2], sys.argv[3])
+    rankade = Rankade(username, passwd, playground, groupname)
 
     index = 1
     for p in kicker.plays.keys():
@@ -193,16 +222,16 @@ if __name__ == "__main__":
                                               score1)
 
         if t1_player2 == "":
-            one_match = [kickername_rankadename_mapping[t2_player1],
+            one_match = [namemap[t2_player1],
                          score2,
-                         kickername_rankadename_mapping[t1_player1],
+                         namemap[t1_player1],
                          score1]
         else:
-            one_match = [kickername_rankadename_mapping[t2_player1],
-                         kickername_rankadename_mapping[t2_player2],
+            one_match = [namemap[t2_player1],
+                         namemap[t2_player2],
                          score2,
-                         kickername_rankadename_mapping[t1_player1],
-                         kickername_rankadename_mapping[t1_player2],
+                         namemap[t1_player1],
+                         namemap[t1_player2],
                          score1]
         rankade.insert_one_match(kicker.date, one_match)
 

@@ -27,3 +27,16 @@ kickername_rankadename_mapping = {
 
 playground = "Black Sun Bar"
 groupname = "bjfoosball"
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 4:
+        print "Usage: %s xxx.ktool username passwd" % sys.argv[0]
+        print "\t xxx.ktool: file exported from kickertool"
+        print "\t username/passwd: your rankade user/pass"
+        sys.exit(0)
+
+    kickerrankade.main(sys.argv[1], sys.argv[2], sys.argv[3],
+                       playground,
+                       groupname,
+                       kickername_rankadename_mapping)
