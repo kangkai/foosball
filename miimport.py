@@ -31,6 +31,7 @@ kickername_rankadename_mapping = {
     u"Lisa":u"*Lisa",
     u"lisa":u"*Lisa",
     u"关剑喜（替补）":u"*guanjianxi",
+    u"关剑喜":u"*guanjianxi",
     u"彭亚":u"*Peng Ya",
     u"Peng Ya":u"*Peng Ya",
     u"教练":u"*Gu Yafei",
@@ -40,6 +41,7 @@ kickername_rankadename_mapping = {
     u"lily":u"Lilyhao",
     u"秦岭":u"Ling Qin",
     u"陶见涛":u"*Tao Jiantao",
+    u"陶建涛":u"*Tao Jiantao",
     u"米思远":u"*Mi Siyuan",
     u"雷霞":u"*Lei Xia",
     u"佐罗":u"*Zuo Luo"
@@ -50,13 +52,15 @@ groupname = "mifoosball"
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) != 4:
-        print "Usage: %s xxx.ktool username passwd" % sys.argv[0]
+    if len(sys.argv) < 4:
+        print "Usage: %s xxx.ktool username passwd <skip>" % sys.argv[0]
         print "\t xxx.ktool: file exported from kickertool"
         print "\t username/passwd: your rankade user/pass"
         sys.exit(0)
 
+    start = sys.argv[4] if len(sys.argv) > 4 else 1
     kickerrankade.main(sys.argv[1], sys.argv[2], sys.argv[3],
                        playground,
                        groupname,
-                       kickername_rankadename_mapping)
+                       kickername_rankadename_mapping,
+                       start)

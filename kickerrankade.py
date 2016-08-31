@@ -104,7 +104,7 @@ class Rankade(object):
 
         #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR,
         #                                                    'a.pull-right.btn.btn-default.btn-small.newMatchButton')))
-        time.sleep(60) # FIXME: above wait seems not work very well
+        time.sleep(30) # FIXME: above wait seems not work very well
         driver.find_element_by_css_selector("a.pull-right.btn.btn-default.btn-small.newMatchButton").click()
 
         WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
@@ -187,7 +187,15 @@ class Rankade(object):
 
         print "done"
 
-def main(ktoolfile, username, passwd, playground, groupname, namemap):
+def main(*args):
+    ktoolfile = args[0]
+    username = args[1]
+    passwd = args[2]
+    playground = args[3]
+    groupname = args[4]
+    namemap = args[5]
+    start = args[6]
+
     kicker = Kickertool(ktoolfile)
     print "Number of plays: ", kicker.num_plays()
 
@@ -214,12 +222,26 @@ def main(ktoolfile, username, passwd, playground, groupname, namemap):
             pid = kicker.teams[team2][1]
             t2_player2 = kicker.players[pid]
 
-        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1.encode('utf8'),
-                                              t2_player2.encode('utf8'),
+        if isinstance(t1_player1, str):
+            t1_player1 = unicode(t1_player1, 'utf-8')
+        if isinstance(t1_player2, str):
+            t1_player2 = unicode(t1_player2, 'utf-8')
+        if isinstance(t2_player1, str):
+            t2_player1 = unicode(t2_player1, 'utf-8')
+        if isinstance(t2_player2, str):
+            t2_player2 = unicode(t2_player2, 'utf-8')
+
+        print "%s/%s(%d) \tvs\t %s/%s(%d)" % (t2_player1,
+                                              t2_player2,
                                               score2,
-                                              t1_player1.encode('utf8'),
-                                              t1_player2.encode('utf8'),
+                                              t1_player1,
+                                              t1_player2,
                                               score1)
+
+        if index < int(start):
+            print "start %d, skip..." % int(start)
+            index = index + 1
+            continue
 
         if t1_player2 == "":
             one_match = [namemap[t2_player1],
