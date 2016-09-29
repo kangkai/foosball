@@ -12,9 +12,9 @@ kickertool在这里：
 https://kickertool.com/
 
 # Usage
-'''
+```
 $ .miimport.py 
 Usage: miimport.py xxx.ktool username passwd <skip>
          xxx.ktool: file exported from kickertool
          username/passwd: your rankade user/pass
-'''
+```
