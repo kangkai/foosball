@@ -77,7 +77,7 @@ class Rankade(object):
 
         chrome_options = webdriver.ChromeOptions()
         #chrome_options.add_argument('--start-maximized')
-        chrome_options.add_argument('--proxy-server=socks5://127.0.0.1:1080')
+        chrome_options.add_argument('--proxy-server=http://xx.mioffice.cn:8888')
         self.driver = webdriver.Chrome(chrome_options = chrome_options)
         driver = self.driver
 
@@ -104,10 +104,10 @@ class Rankade(object):
 
         #WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.CSS_SELECTOR,
         #                                                    'a.pull-right.btn.btn-default.btn-small.newMatchButton')))
-        time.sleep(30) # FIXME: above wait seems not work very well
+        time.sleep(10) # FIXME: above wait seems not work very well
         driver.find_element_by_css_selector("a.pull-right.btn.btn-default.btn-small.newMatchButton").click()
 
-        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn.btn-default.btn-sm.next.pull-right')))
         driver.execute_script("matchForm.toggleAdditionalOptions();")
 
         select = Select(driver.find_element_by_name('countFactions'))
